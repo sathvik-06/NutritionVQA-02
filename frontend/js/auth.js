@@ -8,6 +8,15 @@ const isLocal = window.location.hostname === 'localhost' || window.location.host
 window.API_BASE = isLocal ? 'http://127.0.0.1:8000' : 'https://sathvik-cs-nutrition-vqa-backend.hf.space';
 var API_BASE = window.API_BASE;
 
+// ─── Auto-cleanup corrupted tokens ─────────────────────────────
+(function() {
+    const token = localStorage.getItem('token');
+    if (token && (token.startsWith("b'") || token.startsWith('b"') || token.includes("\\n") || token.includes("\n"))) {
+        console.warn('[Auth] Detected corrupted token, clearing it automatically.');
+        localStorage.removeItem('token');
+    }
+})();
+
 // ─── Global Fetch Interceptor (401 → auto-redirect to login) ────
 (function() {
     const _origFetch = window.fetch;
