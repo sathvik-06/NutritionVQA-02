@@ -315,6 +315,7 @@ async def ask_question(request: QuestionRequest, email: str = Depends(get_curren
 
 # ─── Catch-all Static Files for Frontend ──────────────────────────────────────
 # Mounted last so API endpoints take priority
+os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 if os.path.exists(settings.UPLOAD_DIR):
     app.mount("/uploads", StaticFiles(directory=settings.UPLOAD_DIR), name="uploads")
 
