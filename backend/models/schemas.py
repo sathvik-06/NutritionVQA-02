@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field
 from typing import List, Dict, Optional, Any, Union
 from datetime import datetime, date
 
@@ -6,7 +6,7 @@ from datetime import datetime, date
 
 class UserSignup(BaseModel):
     name: str
-    email: EmailStr
+    email: str
     mobile: str
     weight: float
     age: int
@@ -34,7 +34,7 @@ class UserProfileUpdate(BaseModel):
 class UserProfile(BaseModel):
     id: str = Field(..., alias="_id")
     name: str
-    email: EmailStr
+    email: str
     mobile: str
     weight: float
     age: int
