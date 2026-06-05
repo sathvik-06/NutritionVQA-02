@@ -27,7 +27,7 @@ torch>=2.1.2
 
 # Dataset
 datasets==2.16.1
-huggingface-hub==0.20.2
+huggingface-hub>=0.33.5,<2.0
 
 # Utilities
 python-dotenv==1.0.0
