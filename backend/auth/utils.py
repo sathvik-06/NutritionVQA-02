@@ -40,6 +40,10 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
         expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+    # Ensure token is a clean string (some jose versions return bytes)
+    if isinstance(encoded_jwt, bytes):
+        encoded_jwt = encoded_jwt.decode("utf-8")
+    encoded_jwt = encoded_jwt.strip()
     logger.info(f"Token created for: {data.get('sub', 'unknown')} (expires: {expire.isoformat()})")
     return encoded_jwt
 
