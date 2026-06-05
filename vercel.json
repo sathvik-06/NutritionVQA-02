@@ -5,6 +5,10 @@
       "destination": "https://sathvik-cs-nutritionvqa-backend.hf.space/api/$1"
     },
     {
+      "source": "/uploads/(.*)",
+      "destination": "https://sathvik-cs-nutritionvqa-backend.hf.space/uploads/$1"
+    },
+    {
       "source": "/",
       "destination": "/frontend/index.html"
     },
