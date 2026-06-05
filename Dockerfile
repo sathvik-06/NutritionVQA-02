@@ -1,4 +1,4 @@
-FROM python:3.13-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y \
     rsync \
     libgl1 \
     libglib2.0-0 \
+    build-essential \
+    g++ \
     && rm -rf /var/lib/apt/lists/* \
     && git lfs install
 
