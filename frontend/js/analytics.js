@@ -3,7 +3,9 @@
  * Chart.js powered nutrition trend analytics with weekly/monthly views.
  */
 
-var API_BASE = window.location.origin;
+const isLocalAnal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+window.API_BASE = isLocalAnal ? 'http://127.0.0.1:8000' : 'https://sathvik-cs-nutrition-vqa-backend.hf.space';
+var API_BASE = window.API_BASE;
 let calorieChart = null;
 let macroChart = null;
 let scoreChart = null;

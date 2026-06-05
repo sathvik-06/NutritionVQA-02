@@ -4,7 +4,9 @@
  * daily intake, product comparison, health verdict, and gamification.
  */
 
-var API_BASE = window.location.origin;
+const isLocalAppLenovo = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+window.API_BASE = isLocalAppLenovo ? 'http://127.0.0.1:8000' : 'https://sathvik-cs-nutrition-vqa-backend.hf.space';
+var API_BASE = window.API_BASE;
 
 // ─── DOM refs ───────────────────────────────────────────────────
 const dropZone        = document.getElementById("drop-zone");
