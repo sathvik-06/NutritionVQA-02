@@ -261,6 +261,13 @@ async function handleSignup(e) {
                 document.querySelector(".sn-welcome")?.classList.add("hidden");
                 document.querySelector(".sn-signup-prompt")?.classList.add("hidden");
                 document.getElementById("signup-otp-section").classList.remove("hidden");
+                
+                if (data.dev_otp) {
+                    document.getElementById("signup-otp-code").value = data.dev_otp;
+                    setTimeout(() => {
+                        document.getElementById("verify-signup-otp-btn").click();
+                    }, 500);
+                }
             } else {
                 alert("Signup successful! Please log in.");
                 window.location.href = "signin.html";
@@ -303,6 +310,13 @@ async function handleSignin(e) {
                 document.querySelector(".sn-welcome")?.classList.add("hidden");
                 document.querySelector(".sn-signup-prompt")?.classList.add("hidden");
                 document.getElementById("signin-otp-section").classList.remove("hidden");
+                
+                if (data.dev_otp) {
+                    document.getElementById("signin-otp-code").value = data.dev_otp;
+                    setTimeout(() => {
+                        document.getElementById("verify-signin-otp-btn").click();
+                    }, 500);
+                }
             } else {
                 // Backward compatibility (e.g., if mobile wasn't linked)
                 localStorage.setItem("token", data.access_token);

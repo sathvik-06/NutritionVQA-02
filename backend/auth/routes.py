@@ -118,7 +118,11 @@ async def signin(user_data: UserSignin):
             "dev_otp": otp
         }
         
-    return {"message": "Verification code sent to your mobile", "require_otp": True}
+    return {
+        "message": "Verification bypassed. Auto-filling OTP...", 
+        "require_otp": True,
+        "dev_otp": otp
+    }
 
 
 @router.post("/verify-signin-otp", response_model=Token)
@@ -272,8 +276,8 @@ async def send_google_otp(data: dict):
         }
     
     return {
-        "message": "Verification code sent to your mobile via Twilio",
-        "dev_otp": otp if settings.DEBUG else None
+        "message": "Verification bypassed. Auto-filling OTP...",
+        "dev_otp": otp
     }
 
 from pydantic import BaseModel
