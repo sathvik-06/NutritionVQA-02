@@ -101,7 +101,7 @@ if (sendOtpBtn) {
             const data = await res.json();
             if (res.ok) {
                 let msg = data.message;
-                if (data.dev_otp) msg += `\n\nDev OTP: ${data.dev_otp}`;
+                if (data.dev_otp) console.log(`Dev OTP: ${data.dev_otp}`);
                 alert(msg);
                 sendOtpBtn.style.display = "none";
                 otpVerifySection.classList.remove("hidden");
@@ -252,7 +252,7 @@ async function handleSignup(e) {
         if (res.ok) {
             if (data.require_otp) {
                 let msg = data.message;
-                if (data.dev_otp) msg += `\n\nDev OTP: ${data.dev_otp}`;
+                if (data.dev_otp) console.log(`Dev OTP: ${data.dev_otp}`);
                 alert(msg);
                 
                 // Transition to OTP UI
@@ -294,7 +294,7 @@ async function handleSignin(e) {
         if (res.ok) {
             if (data.require_otp) {
                 let msg = data.message;
-                if (data.dev_otp) msg += `\n\nDev OTP: ${data.dev_otp}`;
+                if (data.dev_otp) console.log(`Dev OTP: ${data.dev_otp}`);
                 alert(msg);
                 
                 // Transition to OTP UI
@@ -400,8 +400,36 @@ async function verifyMockGooglePassword() {
     
     const btn = document.querySelector("#google-step-password .gm-btn");
     const origText = btn.innerText;
-    btn.innerText = "Signing in...";
+    btn.innerText = "Sending OTP...";
     btn.disabled = true;
+    
+    try {
+        const res = await fetch(`${API_BASE}/api/auth/google/send-otp`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: selectedMockEmail, mobile: mobile })
+        });
+        const data = await res.json();
+        
+        if (res.ok) {
+            let msg = data.message || "OTP Sent";
+            if (data.dev_otp) {
+                console.log(`Dev OTP: ${data.dev_otp}`);
+            }
+            alert(msg);
+        } else {
+            alert(data.detail || "Failed to send OTP");
+            btn.innerText = origText;
+            btn.disabled = false;
+            return;
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Error sending OTP");
+        btn.innerText = origText;
+        btn.disabled = false;
+        return;
+    }
     
     // Store password and mobile globally for the OTP step
     window.selectedMockPassword = pass;
@@ -439,7 +467,7 @@ async function verifyMockGoogleOtp() {
         const res = await fetch(`${API_BASE}/api/auth/google`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token: fakeJwt })
+            body: JSON.stringify({ token: fakeJwt, otp: otp })
         });
         const data = await res.json();
         

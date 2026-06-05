@@ -235,15 +235,23 @@ async def send_google_otp(data: dict):
     if not email:
         raise HTTPException(status_code=400, detail="Email is required")
     
+    mobile = data.get("mobile")
+    
     db = await get_async_db()
     user = await db.users.find_one({"email": email})
     
-    if not user:
-        raise HTTPException(status_code=401, detail="No account found for this Gmail. Please sign up first.")
-    
-    mobile = user.get("mobile")
+    if user:
+        db_mobile = user.get("mobile")
+        if db_mobile and db_mobile != "N/A":
+            mobile = db_mobile
+            
     if not mobile or mobile == "N/A":
-        raise HTTPException(status_code=400, detail="No mobile number linked to this account for 2FA. Please update your profile.")
+        # Fallback if no mobile is provided or found
+        otp = str(random.randint(100000, 999999))
+        return {
+            "message": "No mobile number linked. Use Dev OTP.",
+            "dev_otp": otp if settings.DEBUG else None
+        }
 
     otp = str(random.randint(100000, 999999))
     
@@ -263,16 +271,21 @@ async def send_google_otp(data: dict):
             "dev_otp": otp if settings.DEBUG else None,
         }
     
-    return {"message": "Verification code sent to your mobile via Twilio"}
+    return {
+        "message": "Verification code sent to your mobile via Twilio",
+        "dev_otp": otp if settings.DEBUG else None
+    }
 
 from pydantic import BaseModel
 
 class GoogleAuthRequest(BaseModel):
     token: str
+    otp: str = None
 
 @router.post("/google")
 async def google_auth(data: GoogleAuthRequest):
     token = data.token
+    otp = data.otp
     if not token:
         raise HTTPException(status_code=400, detail="Google token is required")
         
@@ -295,7 +308,18 @@ async def google_auth(data: GoogleAuthRequest):
     if not email:
         raise HTTPException(status_code=400, detail="Token did not contain an email")
 
+    if not otp:
+        raise HTTPException(status_code=400, detail="OTP is required for 2FA")
+
     db = await get_async_db()
+    
+    otp_data = await db.otp_tokens.find_one({"email": email, "otp": otp})
+    if not otp_data or otp_data["expires_at"] < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="Invalid or expired OTP")
+    
+    # Clean up OTP after successful verification
+    await db.otp_tokens.delete_one({"email": email})
+
     user = await db.users.find_one({"email": email})
     
     if not user:
