@@ -33,49 +33,15 @@ async def signup(user_data: UserSignup):
     if existing_user:
         raise HTTPException(status_code=400, detail="An account already exists with this Gmail. Please sign in.")
     
-    # 2FA: Generate and send OTP for signup
-    otp = str(random.randint(100000, 999999))
-    user_mobile = user_data.mobile
-    
-    await db.otp_tokens.replace_one(
-        {"mobile": user_mobile},
-        {"mobile": user_mobile, "otp": otp, "expires_at": datetime.utcnow() + timedelta(minutes=10)},
-        upsert=True
-    )
-    
-    success = twilio_service and await twilio_service.send_otp(user_mobile, otp)
-    if not success:
-        logger.warning(f"OTP FALLBACK FOR SIGNUP {user_mobile}: {otp}")
-        return {
-            "message": "OTP generated. If SMS was not received, check server logs.",
-            "require_otp": True,
-            "dev_otp": otp if settings.DEBUG else None
-        }
-        
-    return {"message": "Verification code sent to your mobile", "require_otp": True}
-
-
-@router.post("/verify-signup-otp")
-async def verify_signup_otp(user_data: VerifySignupOTPRequest):
-    db = await get_async_db()
-    user_mobile = user_data.mobile
-    
-    otp_data = await db.otp_tokens.find_one({"mobile": user_mobile, "otp": user_data.otp})
-    if not otp_data or otp_data["expires_at"] < datetime.utcnow():
-        raise HTTPException(status_code=400, detail="Invalid or expired OTP")
-        
-    # Valid OTP, proceed with account creation
     hashed_password = get_password_hash(user_data.password)
-    user_doc = user_data.dict(exclude={"otp"})
+    user_doc = user_data.dict()
     user_doc["password"] = hashed_password
     user_doc["created_at"] = datetime.utcnow()
     
     result = await db.users.insert_one(user_doc)
     user_id = str(result.inserted_id)
     
-    await db.otp_tokens.delete_one({"mobile": user_mobile})
-    
-    return {"message": "User created successfully", "user_id": user_id}
+    return {"message": "User created successfully", "user_id": user_id, "require_otp": False}
 
 
 @router.post("/signin")
@@ -96,55 +62,8 @@ async def signin(user_data: UserSignin):
         logger.warning(f"Signin failed: invalid password for {user_data.login}")
         raise HTTPException(status_code=401, detail="Invalid password")
         
-    # 2FA: Generate and send OTP for signin
-    otp = str(random.randint(100000, 999999))
-    user_mobile = user.get("mobile", "N/A")
-        
-    await db.otp_tokens.replace_one(
-        {"mobile": user_mobile},
-        {"mobile": user_mobile, "otp": otp, "expires_at": datetime.utcnow() + timedelta(minutes=10)},
-        upsert=True
-    )
-    
-    success = False
-    if user_mobile != "N/A":
-        success = twilio_service and await twilio_service.send_otp(user_mobile, otp)
-        
-    if not success:
-        logger.warning(f"OTP FALLBACK FOR SIGNIN {user_mobile}: {otp}")
-        return {
-            "message": "OTP generated. Since no mobile is linked or Twilio failed, use the Dev OTP.",
-            "require_otp": True,
-            "dev_otp": otp
-        }
-        
-    return {
-        "message": "Verification bypassed. Auto-filling OTP...", 
-        "require_otp": True,
-        "dev_otp": otp
-    }
-
-
-@router.post("/verify-signin-otp", response_model=Token)
-async def verify_signin_otp(req: VerifySigninOTPRequest):
-    db = await get_async_db()
-    
-    # Find user by email or mobile to get their actual mobile number
-    user = await db.users.find_one({
-        "$or": [{"email": req.login}, {"mobile": req.login}]
-    })
-    if not user:
-        raise HTTPException(status_code=401, detail="User not found")
-        
-    user_mobile = user.get("mobile")
-    otp_data = await db.otp_tokens.find_one({"mobile": user_mobile, "otp": req.otp})
-    if not otp_data or otp_data["expires_at"] < datetime.utcnow():
-        raise HTTPException(status_code=400, detail="Invalid or expired OTP")
-        
-    await db.otp_tokens.delete_one({"mobile": user_mobile})
-    
     access_token = create_access_token(data={"sub": user["email"]})
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token, "token_type": "bearer", "require_otp": False}
 
 @router.post("/forgot-password")
 async def forgot_password(req: ForgotPasswordRequest):
@@ -233,52 +152,7 @@ async def reset_password(req: ResetPasswordRequest):
     
     return {"message": "Password reset successfully"}
 
-@router.post("/google/send-otp")
-async def send_google_otp(data: dict):
-    email = data.get("email")
-    if not email:
-        raise HTTPException(status_code=400, detail="Email is required")
-    
-    mobile = data.get("mobile")
-    
-    db = await get_async_db()
-    user = await db.users.find_one({"email": email})
-    
-    if user:
-        db_mobile = user.get("mobile")
-        if db_mobile and db_mobile != "N/A":
-            mobile = db_mobile
-            
-    if not mobile or mobile == "N/A":
-        # Fallback if no mobile is provided or found
-        otp = str(random.randint(100000, 999999))
-        return {
-            "message": "No mobile number linked. Use Dev OTP.",
-            "dev_otp": otp if settings.DEBUG else None
-        }
 
-    otp = str(random.randint(100000, 999999))
-    
-    # Store in DB for verification
-    await db.otp_tokens.replace_one(
-        {"email": email},
-        {"email": email, "otp": otp, "expires_at": datetime.utcnow() + timedelta(minutes=10)},
-        upsert=True
-    )
-    
-    # SEND REAL OTP VIA TWILIO
-    success = twilio_service and await twilio_service.send_otp(mobile, otp)
-    if not success:
-        logger.warning(f"TWILIO FALLBACK OTP FOR {mobile}: {otp}")
-        return {
-            "message": "OTP sent via simulated SMS (check server logs if Twilio unavailable)",
-            "dev_otp": otp if settings.DEBUG else None,
-        }
-    
-    return {
-        "message": "Verification bypassed. Auto-filling OTP...",
-        "dev_otp": otp
-    }
 
 from pydantic import BaseModel
 
@@ -312,17 +186,7 @@ async def google_auth(data: GoogleAuthRequest):
     if not email:
         raise HTTPException(status_code=400, detail="Token did not contain an email")
 
-    if not otp:
-        raise HTTPException(status_code=400, detail="OTP is required for 2FA")
-
     db = await get_async_db()
-    
-    otp_data = await db.otp_tokens.find_one({"email": email, "otp": otp})
-    if not otp_data or otp_data["expires_at"] < datetime.utcnow():
-        raise HTTPException(status_code=400, detail="Invalid or expired OTP")
-    
-    # Clean up OTP after successful verification
-    await db.otp_tokens.delete_one({"email": email})
 
     user = await db.users.find_one({"email": email})
     

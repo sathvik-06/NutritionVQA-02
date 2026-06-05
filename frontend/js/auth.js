@@ -260,28 +260,8 @@ async function handleSignup(e) {
         const data = await res.json();
 
         if (res.ok) {
-            if (data.require_otp) {
-                let msg = data.message;
-                if (data.dev_otp) console.log(`Dev OTP: ${data.dev_otp}`);
-                alert(msg);
-                
-                // Transition to OTP UI
-                window.signupDataTemp = body;
-                signupForm.classList.add("hidden");
-                document.querySelector(".sn-welcome")?.classList.add("hidden");
-                document.querySelector(".sn-signup-prompt")?.classList.add("hidden");
-                document.getElementById("signup-otp-section").classList.remove("hidden");
-                
-                if (data.dev_otp) {
-                    document.getElementById("signup-otp-code").value = data.dev_otp;
-                    setTimeout(() => {
-                        document.getElementById("verify-signup-otp-btn").click();
-                    }, 500);
-                }
-            } else {
-                alert("Signup successful! Please log in.");
-                window.location.href = "signin.html";
-            }
+            alert("Signup successful! Please log in.");
+            window.location.href = "signin.html";
         } else {
             const errorMsg = data.detail || "Signup failed";
             alert(errorMsg);
@@ -309,29 +289,8 @@ async function handleSignin(e) {
         const data = await res.json();
 
         if (res.ok) {
-            if (data.require_otp) {
-                let msg = data.message;
-                if (data.dev_otp) console.log(`Dev OTP: ${data.dev_otp}`);
-                alert(msg);
-                
-                // Transition to OTP UI
-                window.signinLoginTemp = login;
-                signinForm.classList.add("hidden");
-                document.querySelector(".sn-welcome")?.classList.add("hidden");
-                document.querySelector(".sn-signup-prompt")?.classList.add("hidden");
-                document.getElementById("signin-otp-section").classList.remove("hidden");
-                
-                if (data.dev_otp) {
-                    document.getElementById("signin-otp-code").value = data.dev_otp;
-                    setTimeout(() => {
-                        document.getElementById("verify-signin-otp-btn").click();
-                    }, 500);
-                }
-            } else {
-                // Backward compatibility (e.g., if mobile wasn't linked)
-                localStorage.setItem("token", data.access_token);
-                window.location.href = "index.html"; 
-            }
+            localStorage.setItem("token", data.access_token);
+            window.location.href = "index.html"; 
         } else {
             alert(data.detail || "Signin failed");
         }
@@ -417,72 +376,18 @@ async function verifyMockGooglePassword() {
     const pass = document.getElementById("google-pass-input").value;
     const mobile = document.getElementById("google-mobile-input") ? document.getElementById("google-mobile-input").value : "N/A";
     
-    if (!mobile || mobile.trim() === "" || mobile === "N/A") {
-        return alert("Please enter your mobile number for 2FA.");
-    }
     if (!pass) return alert("Please enter your password");
     
     const btn = document.querySelector("#google-step-password .gm-btn");
     const origText = btn.innerText;
-    btn.innerText = "Sending OTP...";
+    btn.innerText = "Authenticating...";
     btn.disabled = true;
     
-    try {
-        const res = await fetch(`${API_BASE}/api/auth/google/send-otp`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: selectedMockEmail, mobile: mobile })
-        });
-        const data = await res.json();
-        
-        if (res.ok) {
-            let msg = data.message || "OTP Sent";
-            if (data.dev_otp) {
-                console.log(`Dev OTP: ${data.dev_otp}`);
-            }
-            alert(msg);
-        } else {
-            alert(data.detail || "Failed to send OTP");
-            btn.innerText = origText;
-            btn.disabled = false;
-            return;
-        }
-    } catch (err) {
-        console.error(err);
-        alert("Error sending OTP");
-        btn.innerText = origText;
-        btn.disabled = false;
-        return;
-    }
-    
-    // Store password and mobile globally for the OTP step
-    window.selectedMockPassword = pass;
-    window.selectedMockMobile = mobile;
-    
-    btn.innerText = origText;
-    btn.disabled = false;
-    
-    // Transition to OTP step
-    document.getElementById("google-step-password").classList.add("hidden");
-    document.getElementById("google-step-otp").classList.remove("hidden");
-    document.getElementById("google-otp-email-display").innerText = selectedMockEmail;
-}
-
-async function verifyMockGoogleOtp() {
-    const otp = document.getElementById("google-otp-input").value;
-    if (!otp || otp.length < 4) return alert("Please enter a valid OTP");
-    
-    const btn = document.querySelector("#google-step-otp .gm-btn");
-    const origText = btn.innerText;
-    btn.innerText = "Verifying...";
-    btn.disabled = true;
-    
-    // Create a fake JWT token with the email/name/password/mobile
     const payload = {
         email: selectedMockEmail,
         name: selectedMockName,
-        password: window.selectedMockPassword,
-        mobile: window.selectedMockMobile || "N/A"
+        password: pass,
+        mobile: mobile
     };
     let encodedPayload = btoa(JSON.stringify(payload)).replace(/\+/g, '-').replace(/\//g, '_');
     const fakeJwt = `dummyHeader.${encodedPayload}.dummySignature`;
@@ -491,7 +396,7 @@ async function verifyMockGoogleOtp() {
         const res = await fetch(`${API_BASE}/api/auth/google`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ token: fakeJwt, otp: otp })
+            body: JSON.stringify({ token: fakeJwt })
         });
         const data = await res.json();
         
