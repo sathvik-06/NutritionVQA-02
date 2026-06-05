@@ -12,7 +12,7 @@ Hugging Face Spaces is perfect for hosting your FastAPI backend because it natur
 
 ### 1. Create a New Space
 1. Go to [Hugging Face Spaces](https://huggingface.co/spaces) and click **Create new Space**.
-2. **Space name:** `nutrition-vqa-backend` (or whatever you prefer).
+2. **Space name:** `nutritionvqa-backend` (or whatever you prefer).
 3. **License:** Choose one (e.g., MIT).
 4. **Select the Space SDK:** Choose **Docker** -> **Blank**.
 5. **Space Hardware:** The free tier (`CPU basic - 2 vCPU · 16 GB`) is usually enough, though responses may be slightly slower. If you have a Pro account, a small GPU is better.
@@ -33,7 +33,7 @@ You can either link your GitHub repository or upload files manually. Upload the 
 
 ### 3. Build and Wait
 Once the files are uploaded, Hugging Face will automatically detect the `Dockerfile` and start building your image. Wait for the status to change from "Building" to "Running".
-- **Your Backend URL will look like:** `https://yourusername-nutrition-vqa-backend.hf.space`
+- **Your Backend URL will look like:** `https://yourusername-nutritionvqa-backend.hf.space`
 
 ---
 
@@ -45,7 +45,7 @@ Vercel is the ideal host for your vanilla HTML/JS frontend.
 Vercel works best by connecting to a Git repository. Push your entire project (including the `frontend/` folder and `vercel.json`) to a public or private GitHub repository.
 
 ### 2. Update `vercel.json` (If needed)
-Check your `vercel.json` file. It currently points to `https://sathvik-cs-nutrition-vqa-backend.hf.space`. 
+Check your `vercel.json` file. It currently points to `https://sathvik-cs-nutritionvqa-backend.hf.space`. 
 
 ```json
 {

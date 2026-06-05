@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://sathvik-cs-nutrition-vqa-backend.hf.space/api/$1"
+      "destination": "https://sathvik-cs-nutritionvqa-backend.hf.space/api/$1"
     },
     {
       "source": "/",

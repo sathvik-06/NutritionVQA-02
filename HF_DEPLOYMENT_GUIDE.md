@@ -13,7 +13,7 @@ Here is the step-by-step guide to getting your backend running:
 1. Go to [Hugging Face Spaces](https://huggingface.co/spaces) and log in.
 2. Click the **Create new Space** button.
 3. Fill in the required details:
-   - **Space name:** `nutrition-vqa-backend` (or whatever you prefer)
+   - **Space name:** `nutritionvqa-backend` (or whatever you prefer)
    - **License:** Openrail or MIT (Optional)
    - **Select the Space SDK:** Select **Gradio** (This is crucial, do *not* select Docker).
    - **Space Hardware:** Select the Free CPU (or a GPU if your Mistral usage requires it).

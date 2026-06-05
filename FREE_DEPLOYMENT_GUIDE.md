@@ -15,7 +15,7 @@ Hugging Face Spaces allows you to host Python APIs inside Docker containers for 
 ### Step 1: Create a Hugging Face Account
 1. Go to [Hugging Face](https://huggingface.co/) and create a free account.
 2. Go to your profile and click **New Space**.
-3. Name it `nutrition-vqa-backend`.
+3. Name it `nutritionvqa-backend`.
 4. Select **Docker** as the Space SDK, and choose the **Blank** template.
 5. Set Space Hardware to **Free (2 vCPU, 16GB RAM)**.
 6. Click **Create Space**.
@@ -64,7 +64,7 @@ CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "7860"]
 2. Scroll down to **Variables and secrets**.
 3. Add your `MISTRAL_API_KEY`, `MONGODB_URI` (Use MongoDB Atlas free tier for cloud database), etc.
 
-*Your backend will now build and launch! Once it says "Running", click the three dots at the top right -> **Embed this Space** to find your direct API URL (it will look like `https://yourusername-nutrition-vqa-backend.hf.space`).*
+*Your backend will now build and launch! Once it says "Running", click the three dots at the top right -> **Embed this Space** to find your direct API URL (it will look like `https://yourusername-nutritionvqa-backend.hf.space`).*
 
 ---
 
@@ -76,7 +76,7 @@ Now that your backend is running, you need to point your frontend to it and depl
 Open your `frontend/js/app.js` and `frontend/js/auth.js` files. 
 Change the base URL from `http://localhost:8000` to your new Hugging Face API URL:
 ```javascript
-const API_BASE_URL = 'https://yourusername-nutrition-vqa-backend.hf.space';
+const API_BASE_URL = 'https://yourusername-nutritionvqa-backend.hf.space';
 ```
 
 ### Step 2: Deploy to Vercel

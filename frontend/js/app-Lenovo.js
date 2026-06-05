@@ -5,7 +5,7 @@
  */
 
 const isLocalAppLenovo = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-window.API_BASE = isLocalAppLenovo ? 'http://127.0.0.1:8000' : 'https://sathvik-cs-nutrition-vqa-backend.hf.space';
+window.API_BASE = isLocalAppLenovo ? 'http://127.0.0.1:8000' : 'https://sathvik-cs-nutritionvqa-backend.hf.space';
 var API_BASE = window.API_BASE;
 
 // ─── DOM refs ───────────────────────────────────────────────────
