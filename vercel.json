@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/(.*)",
+      "destination": "https://sathvik-cs-nutrition-vqa-backend.hf.space/api/$1"
+    },
+    {
       "source": "/",
       "destination": "/frontend/index.html"
     },
