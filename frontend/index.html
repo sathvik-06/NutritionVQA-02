@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NutritionVQA-RAG — AI-powered nutrition label analysis">
+    <title>NutritionVQA | AI Nutrition Assistant</title>
+    
+    <!-- PWA Meta Tags & Icons -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <meta name="theme-color" content="#28a745">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥗</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="css/style.css?v=4.5">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🥗</span>
+                <span class="logo-text">Nutrition<span class="accent">VQA</span></span>
+            </div>
+            
+            <div class="nav-pills">
+                <button class="nav-pill active" data-target="analyze-app">Analyzer</button>
+                <button class="nav-pill" data-target="compare-app">Comparator</button>
+                <button class="nav-pill" data-target="chat-app">AI Expert</button>
+            </div>
+
+            <div class="nav-user">
+                <button id="theme-toggle" class="theme-toggle-v2" title="Toggle Theme">
+                    <div class="toggle-knob">☀️</div>
+                </button>
+                
+                <button id="nav-install-btn" class="nav-install-btn hidden" title="Install App">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                </button>
+
+                <button class="nav-icon-btn" title="Notifications">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                </button>
+
+                <div class="user-profile-v2">
+                    <div class="user-avatar-v2" id="user-initials">S</div>
+                    <span class="user-greeting">Hi, <span id="user-name">Sathvik</span></span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+
+                <button class="btn-logout-v2" onclick="logout()" title="Logout">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- PWA Install Banner -->
+        <div id="pwa-install-banner" class="pwa-banner hidden">
+            <div class="pwa-banner-content">
+                <span class="pwa-icon">📲</span>
+                <div class="pwa-text-content">
+                    <h4>Install NutritionVQA</h4>
+                    <p>Add to your home screen for a fast, native mobile experience with camera access!</p>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+                <button id="pwa-install-btn" class="btn-pwa-install">Install App</button>
+                <button class="pwa-close-btn" onclick="dismissPwaBanner()" aria-label="Close" style="background:transparent; border:none; font-size:1.5rem; color:var(--text-muted); cursor:pointer;">&times;</button>
+            </div>
+        </div>
+
+        <!-- ── ANALYZER VIEW ── -->
+        <div id="analyze-app" class="app-view active">
+            <div class="view-header">
+                <h2>🌿 Label Analyzer</h2>
+                <p>Upload a nutrition label for instant AI analysis and a personalized health verdict.</p>
+            </div>
+
+            <div class="analyzer-layout">
+                <!-- Left: Upload Area -->
+                <div class="view-main">
+                    <div class="card upload-card-v2" id="drop-zone">
+                        <div class="upload-inner-v2">
+                            <div class="upload-icon-v2">
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="16 16 12 12 8 16"/>
+                                    <line x1="12" y1="12" x2="12" y2="21"/>
+                                    <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+                                </svg>
+                            </div>
+                            <p class="upload-title-v2">Drag &amp; drop your image here</p>
+                            <p class="upload-or">or</p>
+                            <button type="button" class="btn-choose-image" id="btn-analyzer-choose">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                Choose Image
+                            </button>
+                            <button type="button" class="btn-camera-subtle" id="btn-camera-analyzer">📸 Use Camera</button>
+                            <p class="upload-formats">Supports: PNG, JPG, JPEG, WEBP</p>
+                        </div>
+                        <input type="file" id="file-input" accept="image/*" style="display:none;">
+                    </div>
+
+                    <!-- Preview Container -->
+                    <div id="preview-container" class="preview-container hidden">
+                        <div class="preview-wrapper">
+                            <img id="image-preview" src="" alt="Preview" class="responsive-preview clickable-image" onclick="openLightbox(this.src)">
+                            <button id="remove-image" class="remove-btn-overlay" onclick="resetAnalyzer()">✕</button>
+                        </div>
+                        <div id="analyzer-loader" class="analyzer-loader hidden">
+                            <div class="spinner"></div>
+                            <p>Analyzing label &amp; extracting nutrition facts...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Tips Card -->
+                <div class="tips-card card">
+                    <div class="tips-header">
+                        <span class="tips-sun">☀️</span>
+                        <h3>Tips for better results</h3>
+                    </div>
+                    <ul class="tips-list">
+                        <li><span class="tip-check">✅</span> Upload a clear image</li>
+                        <li><span class="tip-check">✅</span> Ensure all text is visible</li>
+                        <li><span class="tip-check">✅</span> Avoid glare and shadows</li>
+                        <li><span class="tip-check">✅</span> Include the full label</li>
+                    </ul>
+                    <div class="tips-food-img">
+                        <img src="assets/salad-bowl.png" alt="Healthy food">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full-width results below -->
+            <div id="analyzer-result" class="hidden analyzer-full-width"></div>
+
+            <!-- Recent Analyses -->
+            <div class="recent-section">
+                <h3 class="recent-title">Recent Analyses</h3>
+                <div id="recent-analyses-list" class="recent-list">
+                    <p class="no-recent-text">No recent analyses yet. Upload your first nutrition label above!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── COMPARATOR VIEW ── -->
+        <div id="compare-app" class="app-view">
+            <div class="view-header">
+                <h2>Product Comparator</h2>
+                <p>Compare two labels side-by-side to find the healthiest choice for you.</p>
+            </div>
+
+            <div class="card compare-card-v2">
+                <div class="compare-container-v2">
+                    <!-- Product A -->
+                    <div class="compare-box-v2">
+                        <div class="compare-box-header">
+                            <span class="compare-circle circle-a">A</span>
+                            <span class="compare-box-title">Product A</span>
+                        </div>
+                        <div class="compare-upload-area" id="compare-drop-a">
+                            <div id="compare-preview-a" class="slot-preview hidden">
+                                <img id="compare-img-a" src="" alt="Product A" class="responsive-preview clickable-image" onclick="openLightbox(this.src)">
+                                <div id="loader-compare-a" class="analyzer-loader hidden"><div class="spinner"></div></div>
+                                <button onclick="resetCompare('a')" class="remove-btn-overlay">✕</button>
+                            </div>
+                            <div class="upload-content-v2" id="upload-content-a" style="cursor: pointer;">
+                                <div class="upload-icon-v2">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+                                    </svg>
+                                </div>
+                                <span class="upload-label-v2">Upload label A</span>
+                            </div>
+                            <input type="file" id="compare-file-a" accept="image/*" hidden>
+                        </div>
+                        <button type="button" class="btn-camera-subtle-v2" id="btn-camera-a">📸 Use Camera</button>
+                    </div>
+
+                    <div class="compare-vs-v2">VS</div>
+
+                    <!-- Product B -->
+                    <div class="compare-box-v2">
+                        <div class="compare-box-header">
+                            <span class="compare-circle circle-b">B</span>
+                            <span class="compare-box-title">Product B</span>
+                        </div>
+                        <div class="compare-upload-area" id="compare-drop-b">
+                            <div id="compare-preview-b" class="slot-preview hidden">
+                                <img id="compare-img-b" src="" alt="Product B" class="responsive-preview clickable-image" onclick="openLightbox(this.src)">
+                                <div id="loader-compare-b" class="analyzer-loader hidden"><div class="spinner"></div></div>
+                                <button onclick="resetCompare('b')" class="remove-btn-overlay">✕</button>
+                            </div>
+                            <div class="upload-content-v2" id="upload-content-b" style="cursor: pointer;">
+                                <div class="upload-icon-v2">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+                                    </svg>
+                                </div>
+                                <span class="upload-label-v2">Upload label B</span>
+                            </div>
+                            <input type="file" id="compare-file-b" accept="image/*" hidden>
+                        </div>
+                        <button type="button" class="btn-camera-subtle-v2" id="btn-camera-b">📸 Use Camera</button>
+                    </div>
+                </div>
+
+                <div class="compare-actions-v2">
+                    <button id="compare-btn" class="btn-compare-v2" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                        Compare Now
+                    </button>
+                </div>
+
+                <div id="compare-result" class="compare-result hidden fade-in card" style="margin-top:2rem;"></div>
+                <button id="btn-discuss-compare" class="btn-compare hidden" style="margin-top: 1rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-main);" onclick="switchToChat('compare')">💬 Discuss Comparison with AI</button>
+
+                <!-- Bottom Info Bar -->
+                <div class="info-bar-v2">
+                    <span class="info-icon-v2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 16a1.5 1.5 0 1 1 1.5-1.5A1.5 1.5 0 0 1 12 18zm1-5.5a.5.5 0 0 1-1 0V11a.5.5 0 0 1 1 0zM12 9a1 1 0 1 1-1 1 1 1 0 0 1 1-1z"/>
+                        </svg>
+                    </span>
+                    <p>Our AI compares key nutrients, highlights differences, and helps you make informed choices.</p>
+                </div>
+
+                <!-- Recent Comparisons -->
+                <div class="recent-section" style="margin-top: 3rem;">
+                    <h3 class="recent-title">Recent Comparisons</h3>
+                    <div id="recent-comparisons-list" class="recent-list">
+                        <p class="no-recent-text">No recent comparisons yet. Upload two labels to compare them!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- ── CHAT VIEW (EXPERT) ── -->
+        <div id="chat-app" class="app-view">
+            <div class="chat-layout-v2">
+                <!-- Left: Chat History -->
+                <div class="chat-sidebar-v2 card">
+                    <h3 class="sidebar-title-v2">Chat History</h3>
+                    <button id="new-chat-btn" class="btn-new-chat-v2">
+                        <span class="plus-icon">+</span> New Chat
+                    </button>
+                    <div id="history-list" class="history-list-v2">
+                        <!-- Items injected via JS -->
+                    </div>
+                    <a href="#" class="view-all-chats">View all chats</a>
+                </div>
+
+                <!-- Middle: Main Chat -->
+                <div class="chat-main-v2 card">
+                    <div id="chat-messages" class="chat-messages-v2">
+                        <div class="message bot">
+                            <div class="message-avatar-v2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                            </div>
+                            <div class="message-bubble-v2">
+                                <p><strong>Hello! 👋 I'm your AI Nutrition Expert.</strong></p>
+                                <p>Ask me anything about nutrition, ingredients, health, or your diet.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-wrapper-v2">
+                        <div id="chat-upload-previews" class="chat-previews"></div>
+                        <form id="chat-form" class="chat-input-area-v2">
+                            <input type="file" id="chat-file-input" multiple accept="image/*" hidden>
+                            <button type="button" id="chat-upload-btn" class="btn-input-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.51a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                            </button>
+                            <button type="button" id="chat-camera-btn" class="btn-input-icon" title="Take Photo">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h3.38l1.31-2.62A1 1 0 0 1 8.58 1h6.84a1 1 0 0 1 .89.54L17.62 5H21a2 2 0 0 1 2 2v12z"/><circle cx="12" cy="13" r="4"/></svg>
+                            </button>
+                            <textarea id="question-input" rows="1" placeholder="Ask anything about nutrition..."></textarea>
+                            <button type="submit" id="send-btn" class="btn-send-v2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right: Suggestions -->
+                <div class="chat-suggestions-v2 card">
+                    <h3 class="suggestions-title-v2">Try asking about</h3>
+                    <div class="suggestion-cards">
+                        <div class="suggestion-card" onclick="document.getElementById('question-input').value='Best foods for immunity'; document.getElementById('chat-form').dispatchEvent(new Event('submit'))">
+                            <div class="suggestion-icon icon-shield">🛡️</div>
+                            <span class="suggestion-text">Best foods for immunity</span>
+                        </div>
+                        <div class="suggestion-card" onclick="document.getElementById('question-input').value='How much protein do I need?'; document.getElementById('chat-form').dispatchEvent(new Event('submit'))">
+                            <div class="suggestion-icon icon-leaf">🌿</div>
+                            <span class="suggestion-text">How much protein do I need?</span>
+                        </div>
+                        <div class="suggestion-card" onclick="document.getElementById('question-input').value='Are artificial sweeteners safe?'; document.getElementById('chat-form').dispatchEvent(new Event('submit'))">
+                            <div class="suggestion-icon icon-drop">💧</div>
+                            <span class="suggestion-text">Are artificial sweeteners safe?</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Camera Modal -->
+    <div id="camera-modal" class="modal hidden" onclick="stopCamera()">
+        <button id="close-camera" class="lightbox-close" onclick="stopCamera()">&times;</button>
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header" style="margin-bottom:1.5rem;">
+                <h3 style="display:flex; align-items:center; gap:0.5rem;">📸 Live Camera</h3>
+            </div>
+            <div class="video-container">
+                <video id="video" autoplay playsinline></video>
+                <canvas id="canvas" class="hidden"></canvas>
+            </div>
+            <div class="camera-controls">
+                <button id="switch-camera" class="btn-capture" style="background:var(--bg-card); color:white; border:1px solid var(--border-subtle);">🔄 Switch</button>
+                <button id="capture-frame" class="btn-compare" style="max-width:180px; padding: 0.75rem;">📸 Capture</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PWA Install Guide Modal -->
+    <div id="pwa-guide-modal" class="pwa-modal-backdrop hidden" onclick="closePwaModal()">
+        <div class="pwa-modal" onclick="event.stopPropagation()">
+            <button class="pwa-modal-close" onclick="closePwaModal()">&times;</button>
+            <div class="pwa-modal-header">
+                <div class="pwa-modal-app-icon">🥗</div>
+                <h3>Install NutritionVQA</h3>
+                <p>Add to your home screen for instant access, offline support, and a native app experience.</p>
+            </div>
+
+            <div class="pwa-modal-platform">
+                Detected: <span class="platform-badge" id="pwa-platform-badge">Your Device</span>
+            </div>
+
+            <!-- iOS Instructions -->
+            <div id="pwa-ios-steps" class="pwa-steps hidden">
+                <div class="pwa-step">
+                    <div class="pwa-step-num">1</div>
+                    <div class="pwa-step-text">
+                        <strong>Tap the Share button</strong>
+                        <span>Find the <svg class="ios-share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> icon at the bottom of Safari.</span>
+                    </div>
+                </div>
+                <div class="pwa-step">
+                    <div class="pwa-step-num">2</div>
+                    <div class="pwa-step-text">
+                        <strong>Scroll down &amp; tap "Add to Home Screen"</strong>
+                        <span>It may be below the first row of options.</span>
+                    </div>
+                </div>
+                <div class="pwa-step">
+                    <div class="pwa-step-num">3</div>
+                    <div class="pwa-step-text">
+                        <strong>Tap "Add" to confirm</strong>
+                        <span>The app icon will appear on your home screen.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Android / Desktop Instructions (with prompt) -->
+            <div id="pwa-android-steps" class="pwa-steps hidden">
+                <div class="pwa-step">
+                    <div class="pwa-step-num">1</div>
+                    <div class="pwa-step-text">
+                        <strong>Tap "Install App" below</strong>
+                        <span>Your browser will show a confirmation dialog.</span>
+                    </div>
+                </div>
+                <div class="pwa-step">
+                    <div class="pwa-step-num">2</div>
+                    <div class="pwa-step-text">
+                        <strong>Confirm the installation</strong>
+                        <span>Tap "Install" or "Add" in the popup.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Android / Desktop Fallback Instructions (without prompt) -->
+            <div id="pwa-fallback-steps" class="pwa-steps hidden">
+                <div id="pwa-android-fallback" class="hidden">
+                    <div class="pwa-step">
+                        <div class="pwa-step-num">1</div>
+                        <div class="pwa-step-text">
+                            <strong>Open the Browser Menu</strong>
+                            <span>Tap the three dots (⋮) in the top-right corner of Chrome.</span>
+                        </div>
+                    </div>
+                    <div class="pwa-step">
+                        <div class="pwa-step-num">2</div>
+                        <div class="pwa-step-text">
+                            <strong>Tap "Install app" or "Add to Home screen"</strong>
+                            <span>This will add the shortcut directly to your home screen.</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="pwa-desktop-fallback" class="hidden">
+                    <div class="pwa-step">
+                        <div class="pwa-step-num">1</div>
+                        <div class="pwa-step-text">
+                            <strong>Look at the Address Bar</strong>
+                            <span>Click the Install icon (looks like a monitor with a down arrow) on the right side of the address bar.</span>
+                        </div>
+                    </div>
+                    <div class="pwa-step">
+                        <div class="pwa-step-num">2</div>
+                        <div class="pwa-step-text">
+                            <strong>Or open the menu</strong>
+                            <span>Open your browser menu (⋮ or ⋯) and click "Install NutritionVQA".</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pwa-modal-actions">
+                <button id="pwa-modal-install" class="pwa-modal-install-btn hidden" onclick="triggerPwaInstall()">📲 Install App</button>
+                <button class="pwa-modal-dismiss" onclick="closePwaModal()">Maybe Later</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <img id="lightbox-img" class="lightbox-content" src="" onclick="event.stopPropagation()">
+    </div>
+
+    <script src="js/auth.js?v=15.0"></script>
+    <script src="js/app.js?v=17.0"></script>
+    <script>
+        // Tab switching
+        document.querySelectorAll('.nav-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                const target = pill.getAttribute('data-target');
+                document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
+                document.querySelectorAll('.nav-pill').forEach(p => p.classList.remove('active'));
+                document.getElementById(target).classList.add('active');
+                pill.classList.add('active');
+
+                const title = document.getElementById('chat-title');
+                const input = document.getElementById('question-input');
+                if (target === 'compare-app') {
+                    title.textContent = '💬 Comparison Expert';
+                    input.placeholder = 'Compare these items...';
+                } else {
+                    title.textContent = '💬 AI Nutrition Expert';
+                    input.placeholder = 'Ask about your product...';
+                }
+            });
+        });
+
+        // Choose Image button triggers file picker
+        document.querySelector('.btn-choose-image')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('file-input').click();
+        });
+
+        // Drop zone drag events
+        const dz = document.getElementById('drop-zone');
+        if (dz) {
+            dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+            dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+            dz.addEventListener('drop', e => {
+                e.preventDefault();
+                dz.classList.remove('dragover');
+                if (e.dataTransfer.files.length) {
+                    document.getElementById('file-input').files = e.dataTransfer.files;
+                    document.getElementById('file-input').dispatchEvent(new Event('change'));
+                }
+            });
+            dz.addEventListener('click', e => {
+                if (!e.target.closest('#btn-camera-analyzer')) {
+                    document.getElementById('file-input').click();
+                }
+            });
+        }
+
+        // Comparator upload triggers
+        document.getElementById('btn-upload-a')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('compare-file-a').click(); });
+        document.getElementById('btn-upload-b')?.addEventListener('click', (e) => { e.stopPropagation(); document.getElementById('compare-file-b').click(); });
+        document.getElementById('compare-drop-a')?.addEventListener('click', (e) => { 
+            if (!e.target.closest('#btn-camera-a')) document.getElementById('compare-file-a').click(); 
+        });
+        document.getElementById('compare-drop-b')?.addEventListener('click', (e) => { 
+            if (!e.target.closest('#btn-camera-b')) document.getElementById('compare-file-b').click(); 
+        });
+        
+        // Auto-resize textarea
+        const tx = document.getElementById('question-input');
+        if (tx) {
+            tx.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
+    </script>
+    
+    <!-- Service Worker Registration & PWA Installer -->
+    <script>
+        // ── Service Worker ──
+        if ('serviceWorker' in navigator) {
+            const registerSW = () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered!', reg.scope))
+                    .catch(err => console.error('SW registration failed:', err));
+            };
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                registerSW();
+            } else {
+                window.addEventListener('load', registerSW);
+            }
+        }
+
+        // ── Platform Detection ──
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+        // ── PWA Install Prompt Capture ──
+        let deferredPrompt = null;
+        const installBanner = document.getElementById('pwa-install-banner');
+        const installBtn = document.getElementById('pwa-install-btn');
+        const navInstallBtn = document.getElementById('nav-install-btn');
+        const pwaGuideModal = document.getElementById('pwa-guide-modal');
+
+        // Show install affordances if not already installed
+        function showInstallUI() {
+            if (isStandalone) return;
+            if (installBanner) installBanner.classList.remove('hidden');
+            if (navInstallBtn) navInstallBtn.classList.remove('hidden');
+        }
+
+        // Chrome/Edge/Samsung: capture the native prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallUI();
+        });
+
+        // Show install UI unconditionally on load if not standalone (all platforms)
+        if (!isStandalone) {
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                showInstallUI();
+            } else {
+                window.addEventListener('load', showInstallUI);
+            }
+        }
+
+        // Banner "Install App" button → open the modal
+        if (installBtn) {
+            installBtn.addEventListener('click', () => openPwaModal());
+        }
+
+        // Navbar install button → open the modal
+        if (navInstallBtn) {
+            navInstallBtn.addEventListener('click', () => openPwaModal());
+        }
+
+        // ── Modal Logic ──
+        function openPwaModal() {
+            const badge = document.getElementById('pwa-platform-badge');
+            const iosSteps = document.getElementById('pwa-ios-steps');
+            const androidSteps = document.getElementById('pwa-android-steps');
+            const fallbackSteps = document.getElementById('pwa-fallback-steps');
+            const androidFallback = document.getElementById('pwa-android-fallback');
+            const desktopFallback = document.getElementById('pwa-desktop-fallback');
+            const modalInstallBtn = document.getElementById('pwa-modal-install');
+
+            // Reset
+            iosSteps.classList.add('hidden');
+            androidSteps.classList.add('hidden');
+            fallbackSteps.classList.add('hidden');
+            androidFallback.classList.add('hidden');
+            desktopFallback.classList.add('hidden');
+            modalInstallBtn.classList.add('hidden');
+
+            if (isIOS) {
+                badge.textContent = 'iOS (Safari)';
+                iosSteps.classList.remove('hidden');
+            } else {
+                badge.textContent = isAndroid ? 'Android (Chrome)' : 'Desktop Browser';
+                if (deferredPrompt) {
+                    androidSteps.classList.remove('hidden');
+                    modalInstallBtn.classList.remove('hidden');
+                } else {
+                    fallbackSteps.classList.remove('hidden');
+                    if (isAndroid) {
+                        androidFallback.classList.remove('hidden');
+                    } else {
+                        desktopFallback.classList.remove('hidden');
+                    }
+                }
+            }
+
+            pwaGuideModal.classList.remove('hidden');
+        }
+
+        function closePwaModal() {
+            pwaGuideModal.classList.add('hidden');
+        }
+
+        async function triggerPwaInstall() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('Install prompt outcome:', outcome);
+            deferredPrompt = null;
+            closePwaModal();
+            if (installBanner) installBanner.classList.add('hidden');
+            if (navInstallBtn) navInstallBtn.classList.add('hidden');
+        }
+
+        // Dismiss banner (X or "Maybe Later")
+        function dismissPwaBanner() {
+            if (installBanner) installBanner.classList.add('hidden');
+        };
+
+        window.addEventListener('appinstalled', () => {
+            console.log('NutritionVQA installed!');
+            if (installBanner) installBanner.classList.add('hidden');
+            if (navInstallBtn) navInstallBtn.classList.add('hidden');
+            closePwaModal();
+        });
+    </script>
+</body>
+</html>

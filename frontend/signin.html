@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | NutritionVQA</title>
+    <meta name="description" content="Sign in to NutritionVQA — your AI-powered nutrition assistant.">
+    
+    <!-- PWA Meta Tags & Icons -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    <meta name="theme-color" content="#28a745">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥗</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/signin.css?v=2.4">
+    <!-- Google Auth handled via custom modal -->
+</head>
+<body>
+
+    <!-- ══════════════ HEADER ══════════════ -->
+    <header class="sn-header">
+        <a href="#" class="sn-logo">
+            <span class="logo-emoji">🥗</span>
+            <span>Nutrition<span class="logo-vqa">VQA</span></span>
+        </a>
+        <nav class="sn-nav-links">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How it works</a>
+            <a href="#blog">Blog</a>
+            <a href="#about">About</a>
+        </nav>
+        <div class="sn-header-actions">
+            <button class="theme-toggle-btn" id="theme-toggle" aria-label="Toggle theme">
+                <div class="toggle-knob" id="toggle-knob">☀️</div>
+                <span class="toggle-moon">🌙</span>
+            </button>
+            <a href="signup.html" class="btn-get-started">Get Started &rarr;</a>
+        </div>
+    </header>
+
+    <!-- ══════════════ MAIN ══════════════ -->
+    <main class="sn-main">
+
+        <!-- ── Left Panel ── -->
+        <section class="sn-left">
+            <div class="sn-hero">
+                <div class="hero-badge">✨ AI-POWERED NUTRITION INSIGHTS</div>
+                <h1>Know what <br>you eat.<br><span class="green-line">Live better.</span></h1>
+                <p id="how-it-works" class="desc">
+                    Scan nutrition labels, compare products,
+                    and get AI-powered insights to
+                    make smarter, healthier food choices every day.
+                </p>
+
+                <div id="features" class="sn-features-grid">
+                    <div class="sn-feat-box">
+                        <div class="sn-feat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="12" y1="7" x2="12" y2="17"/></svg>
+                        </div>
+                        <h3>Scan &amp; Analyze</h3>
+                        <p>Get instant nutrition breakdowns</p>
+                    </div>
+                    <div class="sn-feat-box">
+                        <div class="sn-feat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+                        </div>
+                        <h3>Compare Products</h3>
+                        <p>Find healthier choices side-by-side</p>
+                    </div>
+                    <div class="sn-feat-box">
+                        <div class="sn-feat-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="m9 11 2 2 4-4"/></svg>
+                        </div>
+                        <h3>Ask AI Expert</h3>
+                        <p>Get answers to all your nutrition doubts</p>
+                    </div>
+                </div>
+
+                <div class="sn-privacy-banner">
+                    <div class="privacy-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    </div>
+                    <div class="privacy-text">
+                        <strong>Your privacy is our priority.</strong>
+                        <span>Secure, private, and confidential.</span>
+                    </div>
+                    <div class="privacy-arrow">&rsaquo;</div>
+                </div>
+            </div>
+
+            <footer id="about" class="sn-footer">
+                © 2024 NutritionVQA. All rights reserved.
+            </footer>
+        </section>
+
+        <!-- ── Right Panel ── -->
+        <section class="sn-right">
+            <div id="blog" class="sn-salad-bg"></div>
+
+            <div class="sn-card">
+                <!-- Tab -->
+                <div class="sn-card-tab">
+                    <span class="sn-tab-label">Login</span>
+                </div>
+
+                <!-- Welcome -->
+                <div class="sn-welcome">
+                    <h2>Welcome back! 👋</h2>
+                    <p>Login to continue</p>
+                </div>
+
+                <!-- ── Sign-in Form ── -->
+                <form id="signin-form" class="sn-form">
+                    <!-- Email -->
+                    <div class="sn-field">
+                        <span class="sn-field-icon">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </span>
+                        <input type="text" id="login" placeholder="Enter your email" required autocomplete="email">
+                    </div>
+
+                    <!-- Password -->
+                    <div class="sn-field">
+                        <span class="sn-field-icon">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                        </span>
+                        <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                        <button type="button" class="sn-eye-btn" onclick="togglePasswordVisibility('password')" aria-label="Toggle password">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Forgot password -->
+                    <div class="sn-forgot">
+                        <a href="#" id="forgot-password-link">Forgot password?</a>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="sn-login-btn">Login</button>
+
+                    <!-- Divider -->
+                    <div class="sn-divider">
+                        <div class="sn-divider-line"></div>
+                        <span>or continue with</span>
+                        <div class="sn-divider-line"></div>
+                    </div>
+
+                    <!-- Custom Google Button (Simulated for Demo) -->
+                    <button type="button" id="google-signin" class="sn-google-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Continue with Google
+                    </button>
+                </form>
+
+                <!-- ── Forgot Password Section ── -->
+                <div id="forgot-password-section" class="sn-fp-section hidden">
+                    <h2>Reset Password 🔒</h2>
+                    <p>Enter your registered mobile number</p>
+
+                    <div class="sn-field">
+                        <span class="sn-field-icon">
+                            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.13 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 2.88 1.28H5.9a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.03z"/>
+                            </svg>
+                        </span>
+                        <input type="tel" id="reset-mobile" placeholder="Your mobile number">
+                    </div>
+
+                    <button type="button" id="send-otp-btn" class="sn-login-btn">Send OTP</button>
+
+                    <div id="otp-verify-section" class="hidden" style="display:flex;flex-direction:column;gap:1rem;margin-top:1rem;">
+                        <div class="sn-field">
+                            <input type="text" id="otp-code" placeholder="6-digit OTP" maxlength="6"
+                                   style="padding-left:1.1rem;text-align:center;letter-spacing:0.3em;">
+                        </div>
+                        <div class="sn-field">
+                            <input type="password" id="new-password" placeholder="New password"
+                                   style="padding-left:1.1rem;">
+                        </div>
+                        <button type="button" id="reset-final-btn" class="sn-login-btn">Update Password</button>
+                    </div>
+
+                    <button type="button" id="back-to-signin" class="sn-back-btn">← Back to Login</button>
+                </div>
+
+                <div id="signin-otp-section" class="sn-fp-section hidden">
+                    <h2>2-Step Verification 🔒</h2>
+                    <p>Enter the OTP sent to your registered mobile number.</p>
+
+                    <div style="display:flex;flex-direction:column;gap:1rem;margin-top:1rem;">
+                        <div class="sn-field">
+                            <input type="text" id="signin-otp-code" placeholder="6-digit OTP" maxlength="6"
+                                   style="padding-left:1.1rem;text-align:center;letter-spacing:0.3em;">
+                        </div>
+                        <button type="button" id="verify-signin-otp-btn" class="sn-login-btn">Verify & Login</button>
+                    </div>
+
+                    <button type="button" id="back-to-signin-from-otp" class="sn-back-btn">← Back to Login</button>
+                </div>
+
+                <!-- Sign-up prompt -->
+                <div class="sn-signup-prompt">
+                    Don't have an account? <a href="signup.html">Sign up</a>
+                </div>
+            </div>
+            
+            <!-- ── Floating Nutrition Balance Widget ── -->
+            <div class="nutrition-widget">
+                <div class="widget-header">
+                    <h4>Nutrition Balance</h4>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                </div>
+                <div class="widget-content">
+                    <div class="donut-chart">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle-protein" stroke-dasharray="40, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle-carbs" stroke-dasharray="35, 100" stroke-dashoffset="-40" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle-fats" stroke-dasharray="20, 100" stroke-dashoffset="-75" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle-fiber" stroke-dasharray="5, 100" stroke-dashoffset="-95" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <div class="donut-inner">
+                            <span class="donut-title">Good</span>
+                            <span class="donut-subtitle">Balance</span>
+                        </div>
+                    </div>
+                    <ul class="macro-list">
+                        <li><span class="dot dot-protein"></span> <span class="macro-name">Protein</span> <span class="macro-val">40%</span></li>
+                        <li><span class="dot dot-carbs"></span> <span class="macro-name">Carbs</span> <span class="macro-val">35%</span></li>
+                        <li><span class="dot dot-fats"></span> <span class="macro-name">Fats</span> <span class="macro-val">20%</span></li>
+                        <li><span class="dot dot-fiber"></span> <span class="macro-name">Fiber</span> <span class="macro-val">5%</span></li>
+                    </ul>
+                </div>
+                <div class="widget-footer">Keep it balanced for a healthier you!</div>
+            </div>
+        </section>
+        
+        <!-- ── Bottom Trust Bar ── -->
+        <div class="bottom-trust-bar">
+            <div class="trust-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="12" y1="7" x2="12" y2="17"/></svg>
+                <div class="trust-text"><strong>Smart Scanning</strong><span>Instant label insights</span></div>
+            </div>
+            <div class="trust-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"/><rect x="14" y="3" width="7" height="18" rx="1"/></svg>
+                <div class="trust-text"><strong>Healthier Choices</strong><span>Compare & choose better</span></div>
+            </div>
+            <div class="trust-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="m9 11 2 2 4-4"/></svg>
+                <div class="trust-text"><strong>AI Guidance</strong><span>Personalized answers</span></div>
+            </div>
+            <div class="trust-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                <div class="trust-text"><strong>Trusted & Secure</strong><span>Your data is safe</span></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ══════════════ BEAUTIFUL GOOGLE AUTH MODAL (MOCK) ══════════════ -->
+    <div id="google-modal" class="modal-backdrop hidden">
+        <div class="google-auth-card">
+            <div class="google-header" style="text-align: center; margin-bottom: 2rem;">
+                <svg width="40" height="40" viewBox="0 0 24 24" style="margin-bottom: 1rem;">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                <h2 style="font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 400; color: #202124;">Sign in with Google</h2>
+                <p style="color: #5f6368; font-size: 1rem; margin-top: 0.5rem;">Choose an account to continue to <span style="font-weight: 500;">NutritionVQA</span></p>
+            </div>
+
+            <!-- Account Chooser Step -->
+            <div id="google-step-chooser" class="auth-step">
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem; text-align: left;">
+                    
+                    <!-- Account Item -->
+                    <div onclick="selectMockGoogleAccount('sathvikch2006@gmail.com', 'Sathvik')" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border: 1px solid #dadce0; border-radius: 8px; cursor: pointer; transition: background 0.2s;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: #1a73e8; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">S</div>
+                        <div style="flex: 1; overflow: hidden;">
+                            <div style="font-weight: 500; color: #202124; font-size: 0.95rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">Sathvik</div>
+                            <div style="color: #5f6368; font-size: 0.85rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">sathvikch2006@gmail.com</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Account Item -->
+                    <div onclick="selectMockGoogleAccount('demo@gmail.com', 'Demo User')" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; border: 1px solid #dadce0; border-radius: 8px; cursor: pointer; transition: background 0.2s;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: #0f9d58; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">D</div>
+                        <div style="flex: 1; overflow: hidden;">
+                            <div style="font-weight: 500; color: #202124; font-size: 0.95rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">Demo User</div>
+                            <div style="color: #5f6368; font-size: 0.85rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">demo@gmail.com</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Use another account -->
+                    <div onclick="document.getElementById('google-step-chooser').classList.add('hidden'); document.getElementById('google-step-email').classList.remove('hidden');" style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; cursor: pointer;">
+                        <div style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: #5f6368;">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                        </div>
+                        <div style="font-weight: 500; color: #3c4043; font-size: 0.95rem;">Use another account</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: flex-start;">
+                    <button type="button" class="gm-cancel" style="color: #1a73e8; font-weight: 500; font-size: 0.875rem; margin-top:0;" onclick="closeGoogleModal()">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Email Input Step (if they click Use Another Account) -->
+            <div id="google-step-email" class="auth-step hidden">
+                <div class="sn-field" style="margin-bottom: 2.5rem;">
+                    <input type="email" id="google-email-input" class="gm-input" placeholder="Email or phone" style="border-radius: 4px; padding: 13px 15px; border: 1px solid #dadce0; width: 100%; font-size: 1rem;">
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <button type="button" class="gm-cancel" style="color: #1a73e8; font-weight: 500; font-size: 0.875rem; margin-top:0;" onclick="closeGoogleModal()">Cancel</button>
+                    <button type="button" class="gm-btn" style="background: #1a73e8; color: white; border-radius: 4px; padding: 0.5rem 1.5rem; width: auto; margin-top: 0;" onclick="handleMockGoogleEmail()">Next</button>
+                </div>
+            </div>
+
+            <!-- Password Step (hidden by default) -->
+            <div id="google-step-password" class="auth-step hidden">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; border: 1px solid #dadce0; border-radius: 16px; padding: 0.25rem 0.75rem; width: fit-content; margin: 0 auto 2rem auto; font-size: 0.875rem; color: #3c4043;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" style="color: #5f6368;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" fill="currentColor"/></svg>
+                    <span id="google-user-display" style="font-weight: 500;">user@gmail.com</span>
+                    <svg viewBox="0 0 24 24" width="16" height="16" style="cursor: pointer;" onclick="document.getElementById('google-step-password').classList.add('hidden'); document.getElementById('google-step-chooser').classList.remove('hidden');"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" fill="currentColor"/></svg>
+                </div>
+                <div class="sn-field" style="margin-bottom: 1rem;">
+                    <input type="tel" id="google-mobile-input" class="gm-input" placeholder="Enter mobile number for 2FA" style="border-radius: 4px; padding: 13px 15px; border: 1px solid #dadce0; width: 100%; font-size: 1rem;">
+                </div>
+                <div class="sn-field" style="margin-bottom: 2.5rem;">
+                    <input type="password" id="google-pass-input" class="gm-input" placeholder="Enter your password" style="border-radius: 4px; padding: 13px 15px; border: 1px solid #dadce0; width: 100%; font-size: 1rem;">
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <button type="button" class="gm-cancel" style="color: #1a73e8; font-weight: 500; font-size: 0.875rem; margin-top:0;" onclick="closeGoogleModal()">Cancel</button>
+                    <button type="button" class="gm-btn" style="background: #1a73e8; color: white; border-radius: 4px; padding: 0.5rem 1.5rem; width: auto; margin-top: 0;" onclick="verifyMockGooglePassword()">Next</button>
+                </div>
+                </div>
+            </div>
+
+            <!-- OTP Verification Step (2FA) -->
+            <div id="google-step-otp" class="auth-step hidden">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; border: 1px solid #dadce0; border-radius: 16px; padding: 0.25rem 0.75rem; width: fit-content; margin: 0 auto 1rem auto; font-size: 0.875rem; color: #3c4043;">
+                    <svg viewBox="0 0 24 24" width="16" height="16" style="color: #5f6368;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z" fill="currentColor"/></svg>
+                    <span style="font-weight: 500;" id="google-otp-email-display">user@gmail.com</span>
+                </div>
+                <p style="color: #5f6368; font-size: 0.9rem; text-align: center; margin-bottom: 1.5rem;">A verification code was sent to your registered mobile number</p>
+                <div class="sn-field" style="margin-bottom: 2rem;">
+                    <input type="text" id="google-otp-input" class="gm-input" placeholder="Enter 6-digit OTP" maxlength="6" style="border-radius: 4px; padding: 13px 15px; border: 1px solid #dadce0; width: 100%; font-size: 1rem; text-align: center; letter-spacing: 0.3em;">
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <button type="button" class="gm-cancel" style="color: #1a73e8; font-weight: 500; font-size: 0.875rem; margin-top:0;" onclick="closeGoogleModal()">Cancel</button>
+                    <button type="button" class="gm-btn" style="background: #1a73e8; color: white; border-radius: 4px; padding: 0.5rem 1.5rem; width: auto; margin-top: 0;" onclick="verifyMockGoogleOtp()">Verify</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="pwa-install-banner" class="pwa-banner hidden" style="position:fixed; bottom:1rem; left:1rem; right:1rem; z-index:999; margin:0;">
+        <div class="pwa-banner-content">
+            <span class="pwa-icon">📲</span>
+            <div class="pwa-text-content">
+                <h4>Install NutritionVQA</h4>
+                <p>Add to your home screen for a fast, native experience!</p>
+            </div>
+        </div>
+        <div style="display:flex; align-items:center; gap: 0.5rem;">
+            <button id="pwa-install-btn" class="btn-pwa-install">Install App</button>
+            <button class="pwa-close-btn" onclick="dismissPwaBanner()" aria-label="Close" style="background:transparent; border:none; font-size:1.5rem; color:var(--text-muted); cursor:pointer;">&times;</button>
+        </div>
+    </div>
+
+    <!-- PWA Install Guide Modal -->
+    <div id="pwa-guide-modal" class="pwa-modal-backdrop hidden" onclick="closePwaModal()">
+        <div class="pwa-modal" onclick="event.stopPropagation()">
+            <button class="pwa-modal-close" onclick="closePwaModal()">&times;</button>
+            <div class="pwa-modal-header">
+                <div class="pwa-modal-app-icon">🥗</div>
+                <h3>Install NutritionVQA</h3>
+                <p>Add to your home screen for instant access and a native app experience.</p>
+            </div>
+            <div class="pwa-modal-platform">
+                Detected: <span class="platform-badge" id="pwa-platform-badge">Your Device</span>
+            </div>
+            <div id="pwa-ios-steps" class="pwa-steps hidden">
+                <div class="pwa-step">
+                    <div class="pwa-step-num">1</div>
+                    <div class="pwa-step-text">
+                        <strong>Tap the Share button</strong>
+                        <span>Find the <svg class="ios-share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> icon at the bottom of Safari.</span>
+                    </div>
+                </div>
+                <div class="pwa-step">
+                    <div class="pwa-step-num">2</div>
+                    <div class="pwa-step-text">
+                        <strong>Scroll down &amp; tap "Add to Home Screen"</strong>
+                        <span>It may be below the first row of options.</span>
+                    </div>
+                </div>
+                <div class="pwa-step">
+                    <div class="pwa-step-num">3</div>
+                    <div class="pwa-step-text">
+                        <strong>Tap "Add" to confirm</strong>
+                        <span>The app icon will appear on your home screen.</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Android / Desktop Instructions (with prompt) -->
+            <div id="pwa-android-steps" class="pwa-steps hidden">
+                <div class="pwa-step">
+                    <div class="pwa-step-num">1</div>
+                    <div class="pwa-step-text">
+                        <strong>Tap "Install App" below</strong>
+                        <span>Your browser will show a confirmation dialog.</span>
+                    </div>
+                </div>
+                <div class="pwa-step">
+                    <div class="pwa-step-num">2</div>
+                    <div class="pwa-step-text">
+                        <strong>Confirm the installation</strong>
+                        <span>Tap "Install" or "Add" in the popup.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Android / Desktop Fallback Instructions (without prompt) -->
+            <div id="pwa-fallback-steps" class="pwa-steps hidden">
+                <div id="pwa-android-fallback" class="hidden">
+                    <div class="pwa-step">
+                        <div class="pwa-step-num">1</div>
+                        <div class="pwa-step-text">
+                            <strong>Open the Browser Menu</strong>
+                            <span>Tap the three dots (⋮) in the top-right corner of Chrome.</span>
+                        </div>
+                    </div>
+                    <div class="pwa-step">
+                        <div class="pwa-step-num">2</div>
+                        <div class="pwa-step-text">
+                            <strong>Tap "Install app" or "Add to Home screen"</strong>
+                            <span>This will add the shortcut directly to your home screen.</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="pwa-desktop-fallback" class="hidden">
+                    <div class="pwa-step">
+                        <div class="pwa-step-num">1</div>
+                        <div class="pwa-step-text">
+                            <strong>Look at the Address Bar</strong>
+                            <span>Click the Install icon (looks like a monitor with a down arrow) on the right side of the address bar.</span>
+                        </div>
+                    </div>
+                    <div class="pwa-step">
+                        <div class="pwa-step-num">2</div>
+                        <div class="pwa-step-text">
+                            <strong>Or open the menu</strong>
+                            <span>Open your browser menu (⋮ or ⋯) and click "Install NutritionVQA".</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pwa-modal-actions">
+                <button id="pwa-modal-install" class="pwa-modal-install-btn hidden" onclick="triggerPwaInstall()">📲 Install App</button>
+                <button class="pwa-modal-dismiss" onclick="closePwaModal()">Maybe Later</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════ SCRIPTS ══════════════ -->
+    <script>
+        // ── Theme Toggle ──────────────────────────────────────
+        (function() {
+            const saved = localStorage.getItem('nvqa-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            const html  = document.documentElement;
+            const knob  = document.getElementById('toggle-knob');
+            const isDark = html.getAttribute('data-theme') === 'dark';
+            const next  = isDark ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('nvqa-theme', next);
+            knob.textContent = next === 'dark' ? '🌙' : '☀️';
+        });
+
+        // Sync knob on load
+        window.addEventListener('DOMContentLoaded', function() {
+            const knob = document.getElementById('toggle-knob');
+            if (document.documentElement.getAttribute('data-theme') === 'dark') {
+                knob.textContent = '🌙';
+            }
+        });
+    </script>
+    <script src="js/auth.js?v=23.0"></script>
+    
+    <!-- Service Worker Registration & PWA Installer -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            const registerSW = () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registered!', reg.scope))
+                    .catch(err => console.error('SW registration failed:', err));
+            };
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                registerSW();
+            } else {
+                window.addEventListener('load', registerSW);
+            }
+        }
+
+        // Platform Detection
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+        let deferredPrompt = null;
+        const installBanner = document.getElementById('pwa-install-banner');
+        const installBtn = document.getElementById('pwa-install-btn');
+        const pwaGuideModal = document.getElementById('pwa-guide-modal');
+
+        function showInstallUI() {
+            if (isStandalone) return;
+            if (installBanner) installBanner.classList.remove('hidden');
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallUI();
+        });
+
+        // Show install UI unconditionally on load if not standalone (all platforms)
+        if (!isStandalone) {
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                showInstallUI();
+            } else {
+                window.addEventListener('load', showInstallUI);
+            }
+        }
+
+        if (installBtn) {
+            installBtn.addEventListener('click', () => openPwaModal());
+        }
+
+        function openPwaModal() {
+            const badge = document.getElementById('pwa-platform-badge');
+            const iosSteps = document.getElementById('pwa-ios-steps');
+            const androidSteps = document.getElementById('pwa-android-steps');
+            const fallbackSteps = document.getElementById('pwa-fallback-steps');
+            const androidFallback = document.getElementById('pwa-android-fallback');
+            const desktopFallback = document.getElementById('pwa-desktop-fallback');
+            const modalInstallBtn = document.getElementById('pwa-modal-install');
+
+            // Reset
+            iosSteps.classList.add('hidden');
+            androidSteps.classList.add('hidden');
+            fallbackSteps.classList.add('hidden');
+            androidFallback.classList.add('hidden');
+            desktopFallback.classList.add('hidden');
+            modalInstallBtn.classList.add('hidden');
+
+            if (isIOS) {
+                badge.textContent = 'iOS (Safari)';
+                iosSteps.classList.remove('hidden');
+            } else {
+                badge.textContent = isAndroid ? 'Android (Chrome)' : 'Desktop Browser';
+                if (deferredPrompt) {
+                    androidSteps.classList.remove('hidden');
+                    modalInstallBtn.classList.remove('hidden');
+                } else {
+                    fallbackSteps.classList.remove('hidden');
+                    if (isAndroid) {
+                        androidFallback.classList.remove('hidden');
+                    } else {
+                        desktopFallback.classList.remove('hidden');
+                    }
+                }
+            }
+            pwaGuideModal.classList.remove('hidden');
+        }
+
+        function closePwaModal() {
+            pwaGuideModal.classList.add('hidden');
+        }
+
+        async function triggerPwaInstall() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            closePwaModal();
+            if (installBanner) installBanner.classList.add('hidden');
+        }
+
+        window.addEventListener('appinstalled', () => {
+            if (installBanner) installBanner.classList.add('hidden');
+            closePwaModal();
+        });
+
+        function dismissPwaBanner() {
+            if (installBanner) installBanner.classList.add('hidden');
+        }
+
+        // ── Info Modal Logic ──
+        const infoSections = [
+            {
+                id: 'features',
+                title: 'Features',
+                content: `
+                    <div class="info-grid">
+                        <div class="info-item"><strong>Scan & Analyze</strong><p>Instantly get detailed breakdowns of calories, macros, and ingredients by snapping a photo.</p></div>
+                        <div class="info-item"><strong>Compare Products</strong><p>Place two items side-by-side and let AI tell you which is the healthier option.</p></div>
+                        <div class="info-item"><strong>Ask AI Expert</strong><p>Chat with our AI to get personalized diet advice and answers to your nutrition doubts.</p></div>
+                        <div class="info-item"><strong>Progress Tracking</strong><p>Monitor your daily intake and visualize your health journey over time.</p></div>
+                    </div>
+                `
+            },
+            {
+                id: 'how-it-works',
+                title: 'How It Works',
+                content: `
+                    <ol class="info-list">
+                        <li><strong>Upload or Scan:</strong> Take a picture of any food label or search our extensive food database.</li>
+                        <li><strong>AI Processing:</strong> Our advanced Vision AI reads the label and extracts accurate nutritional data.</li>
+                        <li><strong>Get Insights:</strong> Receive a simple, color-coded health score and personalized dietary suggestions.</li>
+                    </ol>
+                `
+            },
+            {
+                id: 'blog',
+                title: 'Nutrition Blog',
+                content: `
+                    <div class="info-grid">
+                        <div class="info-item"><strong>The Truth About Macros</strong><p>Why balancing protein, fats, and carbs matters more than just calorie counting.</p></div>
+                        <div class="info-item"><strong>Hidden Sugars</strong><p>Learn how to spot sneaky sweeteners disguised in seemingly healthy snacks.</p></div>
+                        <div class="info-item"><strong>Eating Green</strong><p>Simple, actionable ways to incorporate more plant-based meals into your busy week.</p></div>
+                    </div>
+                `
+            },
+            {
+                id: 'about',
+                title: 'About NutritionVQA',
+                content: `
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        NutritionVQA is designed to demystify complex nutrition labels. By leveraging state-of-the-art AI, we empower you to make smarter, healthier food choices instantly. 
+                        <br><br>Our mission is simple: <strong>Know what you eat. Live better.</strong>
+                    </p>
+                    <blockquote style="border-left: 4px solid var(--green-accent); padding-left: 1rem; margin-top: 1.5rem; color: var(--text-primary); font-style: italic; background: rgba(40, 167, 69, 0.05); padding: 1rem; border-radius: 8px;">
+                        "Don't just eat what you see, read what you eat. <strong>Label Padhega India!</strong> Building a Healthier, Literate India." 
+                        <br><br><span style="font-size: 0.85rem; font-weight: 700; color: var(--green-dark);">— Inspired by Food Pharmer</span>
+                    </blockquote>
+                `
+            }
+        ];
+
+        let currentInfoIndex = 0;
+
+        function openInfoModal(sectionId) {
+            currentInfoIndex = infoSections.findIndex(s => s.id === sectionId);
+            if (currentInfoIndex === -1) currentInfoIndex = 0;
+            updateInfoModalContent();
+            document.getElementById('info-modal').classList.remove('hidden');
+        }
+
+        function closeInfoModal(e) {
+            document.getElementById('info-modal').classList.add('hidden');
+        }
+
+        function navigateInfo(direction) {
+            currentInfoIndex += direction;
+            if (currentInfoIndex < 0) currentInfoIndex = infoSections.length - 1;
+            if (currentInfoIndex >= infoSections.length) currentInfoIndex = 0;
+            updateInfoModalContent();
+        }
+
+        function updateInfoModalContent() {
+            const section = infoSections[currentInfoIndex];
+            document.getElementById('info-modal-title').innerText = section.title;
+            document.getElementById('info-modal-body').innerHTML = section.content;
+        }
+
+        document.querySelectorAll('.sn-nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                openInfoModal(targetId);
+            });
+        });
+    </script>
+
+    <!-- ── Info Modal for Nav Links ── -->
+    <div id="info-modal" class="modal-backdrop hidden" onclick="closeInfoModal(event)">
+        <div class="info-modal-card" onclick="event.stopPropagation()">
+            <button class="info-modal-close" onclick="closeInfoModal()">&times;</button>
+            <div class="info-modal-header">
+                <h3 id="info-modal-title">Title</h3>
+            </div>
+            <div class="info-modal-body" id="info-modal-body">
+                Content goes here...
+            </div>
+            <div class="info-modal-footer">
+                <button class="info-nav-btn" id="info-btn-prev" onclick="navigateInfo(-1)">&larr; Back</button>
+                <button class="info-nav-btn" id="info-btn-next" onclick="navigateInfo(1)">Next &rarr;</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

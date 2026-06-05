@@ -1,0 +1,170 @@
+import os
+import sys
+import json
+import logging
+import random
+
+# Configure Logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)-8s | %(message)s")
+logger = logging.getLogger("synthetic_generator")
+
+# Add backend dir to sys.path
+backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if backend_dir not in sys.path:
+    sys.path.append(backend_dir)
+
+# Output Paths
+OUTPUT_DIR = os.path.join(backend_dir, "synthetic")
+OUTPUT_FILE = os.path.join(OUTPUT_DIR, "synthetic_labels.json")
+
+# Core products with realistic nutrition metrics
+MOCK_PRODUCTS = [
+    {
+        "product_name": "Premium Greek Yogurt (Blueberry)",
+        "nutrition_data": {
+            "serving_size": "150g",
+            "calories": "120",
+            "protein_g": "15",
+            "fat_g": "2.5",
+            "carbohydrates_g": "10",
+            "sugar_g": "8",
+            "fiber_g": "0",
+            "sodium_mg": "50"
+        },
+        "qa_pairs": [
+            {
+                "question": "Is this Greek Yogurt suitable for a muscle gain goal?",
+                "answer": "Yes, it is highly suitable for muscle gain because it contains 15g of protein per serving (12.5% protein by weight), which provides essential amino acids for muscle repair and synthesis.",
+                "explanation": "Calculated protein ratio: 15g protein in a 120 calorie serving is extremely high (50% of total calories are from protein), making it an excellent high-protein snack."
+            },
+            {
+                "question": "Can I consume this yogurt on a low-sugar diet?",
+                "answer": "Yes, with moderation. It contains 8g of sugar per serving, which is within the daily limit for a standard low-sugar diet, though unsweetened Greek yogurt (usually containing 3-4g of natural sugars) would be a superior alternative.",
+                "explanation": "Evaluated sugar levels: 8g of sugars (mainly natural lactose and some fruit sweetening) is low compared to standard sweetened yogurts which can exceed 20g."
+            }
+        ]
+    },
+    {
+        "product_name": "Organic Whole Grain Oats",
+        "nutrition_data": {
+            "serving_size": "40g",
+            "calories": "150",
+            "protein_g": "5",
+            "fat_g": "3",
+            "carbohydrates_g": "27",
+            "sugar_g": "1",
+            "fiber_g": "4",
+            "sodium_mg": "0"
+        },
+        "qa_pairs": [
+            {
+                "question": "Does this oatmeal support heart health?",
+                "answer": "Yes, it is excellent for heart health. It contains 4g of dietary fiber per serving (primarily soluble beta-glucan fiber) and has 0mg of sodium, both of which are clinically proven to help lower LDL cholesterol and blood pressure.",
+                "explanation": "Fiber to carb ratio is 4/27 (14.8%), which is very high. Combined with zero sodium, it directly aligns with cardiovascular protection guidelines."
+            },
+            {
+                "question": "If I eat two servings of this oat product, how many grams of carbohydrates will I consume?",
+                "answer": "Eating two servings will supply a total of 54 grams of carbohydrates.",
+                "explanation": "Simple arithmetic: 27g of carbohydrates per serving multiplied by 2 servings equals 54g."
+            }
+        ]
+    },
+    {
+        "product_name": "Zero Ultra Energy Drink",
+        "nutrition_data": {
+            "serving_size": "250ml",
+            "calories": "5",
+            "protein_g": "0",
+            "fat_g": "0",
+            "carbohydrates_g": "1",
+            "sugar_g": "0",
+            "fiber_g": "0",
+            "sodium_mg": "180"
+        },
+        "qa_pairs": [
+            {
+                "question": "Is this energy drink acceptable for a diabetic individual?",
+                "answer": "Yes, from a glycemic perspective, because it contains 0g of sugar and only 1g of carbohydrate, meaning it will not cause blood sugar spikes. However, the high caffeine and 180mg of sodium should be monitored for general heart health.",
+                "explanation": "Diabetic evaluation: Zero sucrose/glucose ensures a glycemic index near zero. Sodium is moderate (180mg per 250ml), representing about 8% of the adult daily limit."
+            },
+            {
+                "question": "Are there any fat or protein benefits in this energy drink?",
+                "answer": "No. The product contains 0g of protein and 0g of fat, providing no macronutrient benefits.",
+                "explanation": "Direct label reading confirms 0g for both fat and protein."
+            }
+        ]
+    },
+    {
+        "product_name": "Crunchy Sea Salt Potato Chips",
+        "nutrition_data": {
+            "serving_size": "28g",
+            "calories": "160",
+            "protein_g": "2",
+            "fat_g": "10",
+            "carbohydrates_g": "15",
+            "sugar_g": "1",
+            "fiber_g": "1",
+            "sodium_mg": "170"
+        },
+        "qa_pairs": [
+            {
+                "question": "What makes these chips high-risk for a blood pressure management plan?",
+                "answer": "These potato chips are high-risk due to their elevated sodium levels (170mg per small 28g serving) combined with high saturated fat (10g total fat per serving). High sodium intake promotes fluid retention and vascular tension, which raises blood pressure.",
+                "explanation": "Calculated sodium density: 170mg sodium in just 28g of product is very dense. It is easy to overconsume multiple servings, quickly exceeding 500mg+ of sodium."
+            },
+            {
+                "question": "What is the calorie-to-protein ratio of these chips?",
+                "answer": "The calorie-to-protein ratio is 80:1 (80 calories for every 1 gram of protein).",
+                "explanation": "Calculated ratio: 160 calories / 2g protein = 80 calories per gram of protein."
+            }
+        ]
+    },
+    {
+        "product_name": "Ultimate Vegan Protein Bar (Choco-Almond)",
+        "nutrition_data": {
+            "serving_size": "60g",
+            "calories": "220",
+            "protein_g": "20",
+            "fat_g": "8",
+            "carbohydrates_g": "18",
+            "sugar_g": "3",
+            "fiber_g": "6",
+            "sodium_mg": "140"
+        },
+        "qa_pairs": [
+            {
+                "question": "Why is this bar considered a high-quality meal replacement snack?",
+                "answer": "It provides a highly balanced nutritional profile: 20g of protein to maintain satiety, 6g of fiber for digestive speed and gut health, and a very low sugar content of 3g, which prevents insulin spikes and crashes.",
+                "explanation": "Macronutrient breakdown: 20g protein, 8g fat, and 12g net carbohydrates (18g total - 6g fiber). Caloric efficiency is very high for protein delivery."
+            },
+            {
+                "question": "Is this bar suitable for a keto diet?",
+                "answer": "Yes, it is highly keto-friendly. The net carbohydrate count is only 12 grams per bar, and it contains 8 grams of healthy fats and 20 grams of protein, aligning with ketosis macronutrient ratios.",
+                "explanation": "Keto evaluation: Net carbs = Total Carbs (18g) - Dietary Fiber (6g) = 12g net carbs, which fits standard daily keto budgets (<30g-50g)."
+            }
+        ]
+    }
+]
+
+def main():
+    logger.info("[Synthetic Data] Starting CoSyn-style Synthetic Data Generation...")
+    
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    
+    # Structure of output dataset
+    synthetic_dataset = {
+        "generator": "CoSyn-NutritionVQA-V2",
+        "description": "Multi-hop VQA reasoning pairs and structured labels for nutrition diagnostics.",
+        "products": MOCK_PRODUCTS
+    }
+    
+    # Save to file
+    logger.info(f"Writing synthetic data to: {OUTPUT_FILE}")
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(synthetic_dataset, f, indent=4, ensure_ascii=False)
+        
+    logger.info(f"Successfully generated {len(MOCK_PRODUCTS)} synthetic products, with a total of {sum(len(p['qa_pairs']) for p in MOCK_PRODUCTS)} highly structured VQA pairs!")
+    print("\n[SUCCESS] Synthetic data generation complete!")
+
+if __name__ == "__main__":
+    main()
