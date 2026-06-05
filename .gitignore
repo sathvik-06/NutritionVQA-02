@@ -6,3 +6,4 @@ backend/uploads/
 *.jpg
 *.jpeg
 *.png
+!frontend/assets/*.png
